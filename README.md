@@ -1,6 +1,6 @@
 # Dockerfiles and docker-compose.ymls for Nibyou's Services 
 
-This repository includes the docker configuration files used to run our services. Some services also have their own `Dockerfile`s, which will not be copied to this repo.
+This repository includes the docker configuration files used to run our services. Some services also have their own `Dockerfile`s, which will not be copied to this repo but live in the respective repos of the services themselves.
 
 To get started, here is a small tutorial on how to install docker and docker-compose on Ubuntu 20.04 LTS, which our servers currently run on.
 
