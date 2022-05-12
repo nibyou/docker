@@ -1,0 +1,27 @@
+networks:
+  my-net:
+    external: true
+
+services:
+  caddy:
+    image: caddy:2.4.3-alpine
+    restart: unless-stopped
+    command: caddy reverse-proxy --from https://test-service.dev.nibyou.com:443 --to http://node:3000
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - caddy:/data
+    networks:
+      - my-net
+
+  node:
+    container_name: node
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - my-net
+    ports:
+      - '3000:3000'
+    tty: true
