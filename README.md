@@ -35,27 +35,15 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io
 
 Now, running `sudo docker --version` should not get you any errors.
 
-## docker-compose
+## docker compose
 <sup>For possibly more up-to-date information, visit https://docs.docker.com/compose/install/ </sup>
 
-While docker wants you to use `docker compose`, it's not yet feature-complete and thus, both installations are needed. Thankfully, this is going to be a fast one:
+Docker-compose is now just a plugin for docker, you can install it using the `docker-compose-plugin` package:
 
 ```bash
-sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo apt-get install docker-compose-plugin
 ```
 
-Notice that this will install 1.92.2 which may or may not be the newest supported version of compose 1.
-
-Change the permissions to make the docker-compose script executable:
-
-```bash
-sudo chmod +x /usr/local/bin/docker-compose
-```
-
-Create a symbolic link from the installation location to `/usr/bin`:
-
-```bash
-sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
-```
+To test the installation, you can run `sudo docker compose version`
 
 With this done, check out the service's directories for Dockerfiles and docker-compose.ymls to run the services with.
