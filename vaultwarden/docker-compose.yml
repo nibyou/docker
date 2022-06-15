@@ -14,6 +14,7 @@ services:
       SMTP_USERNAME: ""
       SMTP_FROM: ""
       DOMAIN: "https://vault.example.com"
+      SIGNUPS_ALLOWED: "false"
     volumes:
       - ./vw-data:/data
 
