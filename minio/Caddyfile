@@ -1,0 +1,31 @@
+{
+    admin off
+    email example@example.com
+}
+
+(securityheaders) {
+    header {
+        # Clickjacking protection
+        X-Frame-Options DENY
+
+        # Keep referrer data off of HTTP connections
+        Referrer-Policy no-referrer-when-downgrade
+    }
+}
+
+# minio api block starts here
+s3.example.com {
+    tls {
+        dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+    }
+    import securityheaders
+    reverse_proxy minio:9000
+}
+
+minio.example.com {
+    tls {
+        dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+    }
+    import securityheaders
+    reverse_proxy minio:9001
+}
