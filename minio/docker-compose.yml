@@ -1,50 +1,29 @@
-version: '3.7'
-
 services:
-  minio:
-    hostname: minio
-    image: quay.io/minio/minio:RELEASE.2022-06-25T15-50-16Z
-    command: server --console-address ":9001" http://minio
-    expose:
-      - "9000"
-      - "9001"
-    environment:
-      MINIO_ROOT_USER: minio
-      MINIO_ROOT_PASSWORD: oinim
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
-      interval: 30s
-      timeout: 20s
-      retries: 3
-    networks:
-      - minio
-    volumes:
-      - minio_data
-      
   caddy:
-    build:
-      context: ./
-      dockerfile: dockerfile
-    image: caddy:cloudflare
-    container_name: caddy
-    # Publish ports 80 and 443 on 0.0.0.0 interface
+    image: caddy:2.4.3-alpine
+    networks:
+      - minio-net
+    restart: unless-stopped
     ports:
       - 80:80
       - 443:443
-    networks:
-      - minio
     volumes:
-      # Persistent data for caddy using a named docker volume
-      - caddy_data:/data
-      # Mount Caddyfile
+      - ./caddy:/data
       - ./Caddyfile:/etc/caddy/Caddyfile
+
+  miniod:
+    image: minio/minio
+    networks:
+      - minio-net
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    command: server /mnt/data --console-address :9001
+    volumes:
+      - ./minio/data:/data
     environment:
-      CLOUDFLARE_API_TOKEN: "Insert your Cloudflare API token here."
-    restart: unless-stopped
+      MINIO_ROOT_USER: yourusername
+      MINIO_ROOT_PASSWORD: yourverylongandsecurepasscode
 
 networks:
-  minio:
-  
-volumes:
-  caddy_data:
-  minio_data:
+  minio-net:
