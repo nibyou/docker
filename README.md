@@ -47,3 +47,36 @@ sudo apt-get install docker-compose-plugin
 To test the installation, you can run `sudo docker compose version`
 
 With this done, check out the service's directories for Dockerfiles and docker-compose.ymls to run the services with.
+
+## Logging to Loki
+Instead of using `docker logs <container>` every time, Docker can be set up to pipe it's logs to a Loki Instace.
+
+To enable this, first install the `grafana/loki-docker-driver` Docker plugin:
+
+```bash
+docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions
+```
+
+And then, edit the Docker daemon config at `/etc/docker/daemon.json`:
+
+```bash
+sudo nano /etc/docker/daemon.json
+```
+
+And add the following configuration, with changes for the Loki server, of course:
+
+```json
+{
+    "log-driver": "loki",
+    "log-opts": {
+        "loki-url": "https://<user>:<password>@loki.example.com/loki/api/v1/push",
+        "loki-batch-size": "400"
+    }
+}
+```
+
+Finally, restart Docker:
+
+```bash
+sudo systemctl restart docker
+```
